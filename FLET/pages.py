@@ -639,14 +639,13 @@ def _build_profil_section(page, name: str, profile: dict, rebuild_section) -> ft
             ("disponibilite", "Disponibilité"),
         ])
     if name == "formation":
-        return _section_simple_dict(profile, "formation", [
-            ("ecole", "École"),
-            ("cursus", "Cursus / spécialité"),
-            ("prepa", "Prépa"),
-            ("international", "Expérience internationale (cursus)"),
-            ("specialite", "Spécialité"),
-            ("contenu_cursus", "Contenu du cursus", True),
-        ])
+        return _section_list_cards(
+            page, profile, "formations",
+            empty_factory=config.empty_formation,
+            card_renderer=_formation_card,
+            edit_dialog=_show_formation_dialog,
+            rebuild_section=rebuild_section,
+        )
     if name == "experiences":
         return _section_list_cards(
             page, profile, "experiences",
@@ -924,6 +923,32 @@ NIVEAU_COLORS = {
 }
 
 
+def _formation_card(f, on_edit, on_delete) -> ft.Control:
+    """Carte resume d'une formation dans la section Profil > Formation."""
+    titre = f.get("ecole", "(sans école)")
+    cursus = f.get("cursus", "")
+    periode = f.get("periode", "")
+    lieu = f.get("lieu", "")
+    return ft.Container(
+        content=ft.Column([
+            ft.Row([
+                ft.Text(titre, size=15, weight=ft.FontWeight.BOLD),
+                ft.Container(expand=True),
+                ft.IconButton(ft.Icons.EDIT, tooltip="Modifier", on_click=on_edit),
+                ft.IconButton(ft.Icons.DELETE_OUTLINE, tooltip="Supprimer",
+                             on_click=on_delete, icon_color=ft.Colors.RED_600),
+            ]),
+            ft.Row([
+                ft.Text(lieu, size=11, color=ft.Colors.GREY_700),
+                ft.Text(periode, size=11, color=ft.Colors.GREY_700),
+            ], spacing=15, wrap=True),
+            ft.Text(cursus, size=12, max_lines=2, overflow=ft.TextOverflow.ELLIPSIS),
+        ], spacing=4),
+        bgcolor=ft.Colors.GREY_50, padding=12, border_radius=8,
+        border=ft.Border.all(1, ft.Colors.GREY_300),
+    )
+
+
 def _experience_card(exp, on_edit, on_delete) -> ft.Control:
     niveau = exp.get("niveau_mise_en_avant", "mentionner")
     return ft.Container(
@@ -1001,6 +1026,60 @@ def _cadre_card(c, on_edit, on_delete) -> ft.Control:
 
 
 # ---------- Edit dialogs ----------
+
+def _show_formation_dialog(page, items: list, idx: int, rebuild_section):
+    """Dialog pour editer une formation (ecole, cursus, periode, lieu, etc.)."""
+    f_data = items[idx]
+    fld = {
+        "ecole": ft.TextField(label="École / Université", value=f_data.get("ecole", ""), expand=True),
+        "lieu": ft.TextField(label="Lieu", value=f_data.get("lieu", ""), expand=True),
+        "cursus": ft.TextField(label="Cursus / Diplôme", value=f_data.get("cursus", ""),
+                               multiline=True, min_lines=1, max_lines=3),
+        "specialite": ft.TextField(label="Spécialité", value=f_data.get("specialite", ""), expand=True),
+        "periode": ft.TextField(label="Période (ex: 2020 - 2023)", value=f_data.get("periode", ""), expand=True),
+        "prepa": ft.TextField(label="Prépa (si applicable)", value=f_data.get("prepa", ""),
+                              multiline=True, min_lines=1, max_lines=2),
+        "international": ft.TextField(label="Expérience internationale (si applicable)",
+                                      value=f_data.get("international", ""),
+                                      multiline=True, min_lines=1, max_lines=2),
+        "contenu_cursus": ft.TextField(label="Contenu / matières principales",
+                                       value=f_data.get("contenu_cursus", ""),
+                                       multiline=True, min_lines=2, max_lines=5),
+    }
+
+    def on_save(e):
+        f_data.update({k: v.value for k, v in fld.items()})
+        page.pop_dialog()
+        rebuild_section()
+
+    def on_cancel(e):
+        if not f_data.get("ecole"):
+            items.pop(idx)
+        page.pop_dialog()
+        rebuild_section()
+
+    content = ft.Column([
+        ft.Row([fld["ecole"], fld["lieu"]], spacing=15),
+        ft.Row([fld["specialite"], fld["periode"]], spacing=15),
+        fld["cursus"],
+        fld["prepa"],
+        fld["international"],
+        fld["contenu_cursus"],
+    ], scroll=ft.ScrollMode.AUTO, spacing=10, width=900, height=550,
+        horizontal_alignment=ft.CrossAxisAlignment.STRETCH)
+
+    dlg = ft.AlertDialog(
+        modal=True,
+        title=ft.Text("Formation"),
+        content=content,
+        actions=[
+            ft.TextButton("Annuler", on_click=on_cancel),
+            ft.ElevatedButton("Enregistrer", icon=ft.Icons.SAVE, on_click=on_save,
+                              style=ft.ButtonStyle(bgcolor=ft.Colors.GREEN_600, color=ft.Colors.WHITE)),
+        ],
+    )
+    page.show_dialog(dlg)
+
 
 def _show_experience_dialog(page, items: list, idx: int, rebuild_section):
     exp = items[idx]

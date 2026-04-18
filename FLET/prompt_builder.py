@@ -38,17 +38,38 @@ def _render_identite(p: dict) -> str:
 
 
 def _render_formation(p: dict) -> str:
-    f = p.get("formation", {})
-    lines = ["### Formation"]
-    for label, key in [
-        ("Ecole", "ecole"), ("Cursus", "cursus"),
-        ("Prepa", "prepa"), ("International", "international"),
-        ("Specialite", "specialite"), ("Contenu cursus", "contenu_cursus"),
-    ]:
-        v = f.get(key, "")
-        if v:
-            lines.append(f"- {label} : {v}")
-    return "\n".join(lines)
+    """Rendu de la section Formation. Supporte 'formations' (liste) ou
+    'formation' (dict singulier legacy)."""
+    formations = p.get("formations")
+    if formations is None and "formation" in p:
+        # Legacy : un seul dict
+        formations = [p["formation"]] if p["formation"] else []
+    formations = formations or []
+
+    if not formations:
+        return ""
+
+    lines = ["### Formation\n"]
+    for i, f in enumerate(formations):
+        ecole = f.get("ecole", "(sans école)")
+        lieu = f.get("lieu", "")
+        periode = f.get("periode", "")
+        header = f"#### {ecole}"
+        if lieu:
+            header += f" - {lieu}"
+        if periode:
+            header += f" ({periode})"
+        lines.append(header)
+        for label, key in [
+            ("Cursus", "cursus"), ("Specialite", "specialite"),
+            ("Prepa", "prepa"), ("International", "international"),
+            ("Contenu cursus", "contenu_cursus"),
+        ]:
+            v = (f.get(key) or "").strip()
+            if v:
+                lines.append(f"- {label} : {v}")
+        lines.append("")
+    return "\n".join(lines).rstrip()
 
 
 def _render_experiences(p: dict) -> str:

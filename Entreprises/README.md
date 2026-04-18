@@ -14,18 +14,20 @@ Entreprises/
       relance_<...>.ics                   ← (après envoi) relance J+15
 ```
 
-Exemple concret : pour Clément Bouillier qui postule chez Thales sur un
+Exemple concret : si tu t'appelles Marie Curie et postules chez Thales sur un
 poste "Chef de projet coûts" :
 
 ```
 Entreprises/
   Thales/
     Chef_de_projet_couts/
-      CV_CB_Thales.pdf
-      CV_CB_Thales.tex
-      LM_CB_Thales.docx
+      CV_MC_Thales.pdf
+      CV_MC_Thales.tex
+      LM_MC_Thales.docx
       agent_log.txt
 ```
+
+Les initiales `<INI>` viennent de `profile.identite.nom`.
 
 Plusieurs candidatures pour la même entreprise sont possibles (un sous-dossier
 par offre).

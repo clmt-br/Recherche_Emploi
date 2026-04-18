@@ -29,14 +29,7 @@ DEFAULT_PROFILE = {
         "mobilite": "",
         "disponibilite": "",
     },
-    "formation": {
-        "ecole": "",
-        "cursus": "",
-        "prepa": "",
-        "international": "",
-        "specialite": "",
-        "contenu_cursus": "",
-    },
+    "formations": [],
     "experiences": [],
     "interets_complementaires": [],
     "profil_ambitions": {
@@ -78,6 +71,16 @@ def load_profile() -> dict:
     if PROFILE_PATH.exists():
         data = yaml.safe_load(PROFILE_PATH.read_text(encoding="utf-8"))
         if data and isinstance(data, dict) and "identite" in data:
+            # Migration legacy : "formation" (dict singulier) -> "formations" (liste)
+            if "formation" in data and "formations" not in data:
+                old = data.pop("formation") or {}
+                # Ne migrer que si au moins un champ rempli
+                if any((old.get(k) or "").strip() for k in
+                       ("ecole", "cursus", "prepa", "international",
+                        "specialite", "contenu_cursus")):
+                    data["formations"] = [old]
+                else:
+                    data["formations"] = []
             return data
     return DEFAULT_PROFILE.copy()
 
@@ -104,6 +107,14 @@ def save_settings(data: dict):
 
 
 # ---- Helpers pour les listes ----
+
+def empty_formation() -> dict:
+    return {
+        "ecole": "", "cursus": "", "prepa": "",
+        "international": "", "specialite": "", "contenu_cursus": "",
+        "lieu": "", "periode": "",
+    }
+
 
 def empty_experience() -> dict:
     return {

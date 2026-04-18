@@ -136,8 +136,8 @@ def show_wizard(page: ft.Page, on_done):
             ft.Text("- Au moins 1 expérience professionnelle", size=12),
             ft.Text("- Tes cibles d'emploi", size=12),
             ft.Container(height=10),
-            ft.Text("L'app est pré-remplie avec un exemple (Clément Bouillier). "
-                    "Tu peux supprimer ses champs et saisir les tiens.",
+            ft.Text("Le profil est vide à l'installation. Saisis tes infos "
+                    "puis clique 'Enregistrer tout' en haut à droite.",
                     size=12, italic=True, color=ft.Colors.GREY_700),
             ft.Divider(),
             ft.Text("Authentification Claude :", size=13, weight=ft.FontWeight.BOLD,

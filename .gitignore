@@ -1,0 +1,39 @@
+# Binaire de distribution (heberge via GitHub Releases, pas dans le repo)
+RechercheEmploi.exe
+*.exe
+*.zip
+
+# Donnees utilisateur (DB et profils generes au runtime)
+candidatures.db
+candidatures.db.bak.*
+profile.yaml
+settings.yaml
+agent_log.txt
+
+# Caches Python / build
+__pycache__/
+*.pyc
+*.pyo
+build/
+dist/
+*.spec
+
+# Cookies / secrets
+OUTILS/.linkedin_cookie
+*.cookie
+
+# Artefacts LaTeX
+*.aux
+*.log.bak
+*.out
+*.xdv
+*.toc
+*.synctex.gz
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Candidatures generees (chaque user a les siennes)
+Entreprises/*/
+!Entreprises/README.md

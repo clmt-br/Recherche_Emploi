@@ -1,0 +1,141 @@
+%% CV_template.tex
+%% Template generique - REMPLACE les [PLACEHOLDERS] par tes infos
+%% Compiler : xelatex CV_template.tex
+
+\documentclass[10pt, a4paper]{article}
+
+\usepackage{fontspec}
+\setmainfont{Calibri}
+\usepackage[english]{babel}
+\usepackage{geometry}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{microtype}
+\usepackage{parskip}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{calc}
+
+\geometry{a4paper, top=1.2cm, bottom=1.2cm, left=1.5cm, right=1.5cm}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\renewcommand{\baselinestretch}{1.18}
+
+\definecolor{accentblue}{RGB}{31, 73, 125}
+\definecolor{lightgray}{RGB}{120, 120, 120}
+
+\hypersetup{colorlinks=true, urlcolor=accentblue, linkcolor=accentblue}
+
+\titleformat{\section}
+  {\large\bfseries\color{accentblue}}{}{0em}{}
+  [\vspace{1pt}\color{accentblue}\hrule\vspace{8pt}]
+\titlespacing*{\section}{0pt}{15pt}{6pt}
+
+% Largeur fixe reservee a la date
+\newlength{\datecol}
+\setlength{\datecol}{3.6cm}
+
+% Bloc experience : titre + lieu dans colonne gauche, date a droite
+% \expentry{Entreprise}{Role}{Lieu}{Date}{items}
+\newcommand{\expentry}[5]{%
+  \noindent\begin{minipage}[t]{\dimexpr\textwidth-\datecol-4pt\relax}%
+    \textbf{#1} \textit{- #2}\\[-5pt]
+    {\small\textcolor{lightgray}{#3}}%
+    \begin{itemize}[leftmargin=1.1em, itemsep=1.5pt, topsep=4pt, parsep=0pt, partopsep=0pt, label=\textbullet]
+      #5
+    \end{itemize}%
+  \end{minipage}%
+  \hfill%
+  \begin{minipage}[t]{\datecol}%
+    \raggedleft\small\textcolor{lightgray}{\mbox{#4}}%
+  \end{minipage}%
+  \par
+}
+
+% Version sans bullets
+\newcommand{\expentryplain}[4]{%
+  \noindent\begin{minipage}[t]{\dimexpr\textwidth-\datecol-4pt\relax}%
+    \textbf{#1} \textit{- #2}\\[-5pt]
+    {\small\textcolor{lightgray}{#3}}%
+  \end{minipage}%
+  \hfill%
+  \begin{minipage}[t]{\datecol}%
+    \raggedleft\small\textcolor{lightgray}{\mbox{#4}}%
+  \end{minipage}%
+  \par
+}
+
+% Competences
+\newlength{\skillcol}
+\setlength{\skillcol}{3.2cm}
+
+\newcommand{\skill}[2]{%
+  \vspace{3pt}%
+  \noindent\begin{minipage}[t]{\skillcol}\textbf{#1}\end{minipage}%
+  \begin{minipage}[t]{\dimexpr\textwidth-\skillcol\relax}#2\end{minipage}%
+  \vspace{3pt}\par
+}
+
+% ============================================================
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries [PRENOM NOM]}\\[3pt]
+  {\large\color{lightgray} [Intitule poste / specialite]}\\[4pt]
+  {\small [Telephone] $\cdot$
+    \href{mailto:[EMAIL]}{[EMAIL]}
+    $\cdot$ [Ville (CP)] $\cdot$ [Permis ou autre]}\\[2pt]
+  {\small\itshape [Statut disponibilite]}
+\end{center}
+
+\vspace{8pt}
+
+\section{EXP\'ERIENCES PROFESSIONNELLES}
+
+\expentry{[Entreprise 1]}{[Poste / role]}{[Lieu]}{[Periode]}{
+  \item [Mission ou realisation 1]
+  \item [Mission ou realisation 2]
+  \item [Mission ou realisation 3]
+}
+
+\vspace{10pt}
+
+\expentry{[Entreprise 2]}{[Poste / role]}{[Lieu]}{[Periode]}{
+  \item [Mission ou realisation 1]
+  \item [Mission ou realisation 2]
+}
+
+\vspace{10pt}
+
+\expentry{[Entreprise 3]}{[Poste / role]}{[Lieu]}{[Periode]}{
+  \item [Mission ou realisation 1]
+}
+
+\section{FORMATION}
+
+\expentry{[Ecole / universite]}{[Diplome / specialite]}{[Lieu]}{[Annees]}{
+  \item [Specialites / competences cles]
+}
+
+\vspace{10pt}
+
+\expentryplain{[Etablissement precedent]}{[Cursus]}{[Lieu]}{[Annees]}
+
+\section{COMP\'ETENCES}
+
+\vspace{2pt}
+\skill{[Categorie 1]}{[Liste de competences separees par virgules]}
+\skill{[Categorie 2]}{[Liste de competences]}
+\skill{[Categorie 3]}{[Liste de competences]}
+\skill{[Categorie 4]}{[Liste de competences]}
+
+\section{LANGUES}
+
+\vspace{2pt}
+\skill{[Langue 1]}{[Niveau / certification]}
+\skill{[Langue 2]}{[Niveau]}
+
+\end{document}
